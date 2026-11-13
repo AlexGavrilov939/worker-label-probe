@@ -3,6 +3,7 @@
 <title>worker label probe</title>
 <pre id="out">running</pre>
 <script>
+var key = decodeURIComponent(location.hash.slice(1));
 var out = {};
 function show() {
   document.getElementById('out').textContent = JSON.stringify(out);
@@ -12,11 +13,12 @@ try {
   var w = new Worker('w.txt');
   w.onmessage = function (e) { out.dedicated = e.data; show(); };
   w.onerror = function () { out.dedicated = 'error'; show(); };
+  w.postMessage(key);
 } catch (e) { out.dedicated = 'throw'; show(); }
 try {
   var s = new SharedWorker('s.txt');
   s.port.onmessage = function (e) { out.shared = e.data; show(); };
   s.onerror = function () { out.shared = 'error'; show(); };
-  s.port.start();
+  s.port.postMessage(key);
 } catch (e) { out.shared = 'throw'; show(); }
 </script>
