@@ -1,0 +1,3 @@
+self.onconnect = function (e) {
+  e.ports[0].postMessage(Object.getOwnPropertyNames(self).filter(function (n) { return n.indexOf('__') === 0; }));
+};

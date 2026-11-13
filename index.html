@@ -1,0 +1,22 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>worker label probe</title>
+<pre id="out">running</pre>
+<script>
+var out = {};
+function show() {
+  document.getElementById('out').textContent = JSON.stringify(out);
+  document.title = 'done ' + Object.keys(out).length;
+}
+try {
+  var w = new Worker('w.txt');
+  w.onmessage = function (e) { out.dedicated = e.data; show(); };
+  w.onerror = function () { out.dedicated = 'error'; show(); };
+} catch (e) { out.dedicated = 'throw'; show(); }
+try {
+  var s = new SharedWorker('s.txt');
+  s.port.onmessage = function (e) { out.shared = e.data; show(); };
+  s.onerror = function () { out.shared = 'error'; show(); };
+  s.port.start();
+} catch (e) { out.shared = 'throw'; show(); }
+</script>

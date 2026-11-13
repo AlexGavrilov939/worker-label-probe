@@ -1,0 +1,1 @@
+self.postMessage(Object.getOwnPropertyNames(self).filter(function (n) { return n.indexOf('__') === 0; }));
