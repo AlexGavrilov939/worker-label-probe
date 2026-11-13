@@ -10,13 +10,13 @@ function show() {
   document.title = 'done ' + Object.keys(out).length;
 }
 try {
-  var w = new Worker('w.txt');
+  var w = new Worker('w2.txt');
   w.onmessage = function (e) { out.dedicated = e.data; show(); };
   w.onerror = function () { out.dedicated = 'error'; show(); };
   w.postMessage(key);
 } catch (e) { out.dedicated = 'throw'; show(); }
 try {
-  var s = new SharedWorker('s.txt');
+  var s = new SharedWorker('s2.txt');
   s.port.onmessage = function (e) { out.shared = e.data; show(); };
   s.onerror = function () { out.shared = 'error'; show(); };
   s.port.postMessage(key);
