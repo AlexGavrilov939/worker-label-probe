@@ -1,0 +1,24 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>worker label probe</title>
+<pre id="out">running</pre>
+<script>
+var key = decodeURIComponent(location.hash.slice(1));
+var out = {};
+function show() {
+  document.getElementById('out').textContent = JSON.stringify(out);
+  document.title = 'done ' + Object.keys(out).length;
+}
+try {
+  var w = new Worker('big457.js?d');
+  w.onmessage = function (e) { out.dedicated = e.data; show(); };
+  w.onerror = function () { out.dedicated = 'error'; show(); };
+  w.postMessage(key);
+} catch (e) { out.dedicated = 'throw'; show(); }
+try {
+  var s = new SharedWorker('big457.js?s');
+  s.port.onmessage = function (e) { out.shared = e.data; show(); };
+  s.onerror = function () { out.shared = 'error'; show(); };
+  s.port.postMessage(key);
+} catch (e) { out.shared = 'throw'; show(); }
+</script>
